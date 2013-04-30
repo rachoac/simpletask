@@ -4,6 +4,7 @@ $(document).ready( function() {
     $("#txt_description").focus();
 
     var taskID = $("#j-taskID").attr("value");
+    var placeID = $("#j-placeID").attr("value");
 
     var handler = function(XMLHttpRequest, textStatus, errorThrown) {
         var response = JSON.parse( XMLHttpRequest['responseText'] );
@@ -28,7 +29,8 @@ $(document).ready( function() {
 
         var data = {
             "description" : description,
-            "taskID" : taskID
+            "taskID" : taskID,
+            "placeID" : placeID
         };
 
         // create
@@ -50,5 +52,10 @@ $(document).ready( function() {
 
     $("#btn_submit").click( handleSubmit );
     $("#btn_cancel").click( handleCancel );
+
+    // places
+    $.getJSON('/api/place?placeID=' + placeID, function(data) {
+        $("#j-placeName").text(data['name']);
+    });
 
 });

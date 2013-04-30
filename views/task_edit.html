@@ -7,12 +7,15 @@
 </head>
 
 <input type="hidden" value="{{{taskID}}}" id="j-taskID">
+<input type="hidden" value="{{{placeID}}}" id="j-placeID">
 
 <body>
 
     <p>
         <h3>Description</h3>
         <textarea id="txt_description" class="j-textarea">{{{taskDescription}}}</textarea>
+        <h3>Place</h3>
+        <div id="j-placeName"></div>
     </p>
 
     <p>

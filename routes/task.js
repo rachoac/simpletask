@@ -30,7 +30,15 @@ exports.taskView = function(req, res){
 };
 
 exports.taskCreate = function(req, res){
-    res.render('task_edit');
+    var reqUrl = req.url;
+    var url_parts = url.parse(reqUrl, true);
+    var query = url_parts.query;
+
+    res.render('task_edit', {
+        'placeID' : query['placeID']
+    });
+
+    exports.taskEdit(req, res);
 };
 
 exports.taskEdit = function(req, res){
@@ -39,6 +47,7 @@ exports.taskEdit = function(req, res){
     var query = url_parts.query;
 
     var taskID =  query['taskID'];
+    var placeID =  query['placeID'];
 
     task.persistence.find( "tasks", { 'taskID': taskID }).then( function( found ){
         if ( !found ) {
@@ -48,7 +57,8 @@ exports.taskEdit = function(req, res){
         var first = found[0];
         res.render('task_edit', {
             'taskID' : first['taskID'],
-            'taskDescription' : first['description']
+            'taskDescription' : first['description'],
+            'placeID' : first['placeID']
         });
     });
 
