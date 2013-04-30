@@ -57,3 +57,11 @@ ul.j-task-list {
 .j-task-control-label:hover {
     color: orange;
 }
+
+pre {
+    width: 300px;
+}
+
+.j-task-row {
+    margin-bottom: 10px;
+}
