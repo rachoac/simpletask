@@ -46,7 +46,7 @@ app.get('/api/task', api.taskGet );
 app.post('/api/task', api.taskCreate );
 app.put('/api/task', api.taskEdit );
 app.delete('/api/task', api.taskDelete );
-app.delete('/api/task/list', api.taskList );
+app.get('/api/task/list', api.taskList );
 
 var server = http.createServer(app).listen(config['port'] || 3000, function(){
     console.log("Express server listening on port " + server.address().port);

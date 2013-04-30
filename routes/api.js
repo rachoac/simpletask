@@ -1,5 +1,6 @@
 var jive = require('jive-sdk');
 var task = require('../lib/task');
+var url = require('url');
 
 var handleCreateEdit = function(req,res) {
     var reqUrl = req.url;
@@ -26,6 +27,14 @@ var handleCreateEdit = function(req,res) {
     task.persistence.save( "tasks", taskID, data ).then( respond );
 };
 
+var errorResponse = function( res, code, error ){
+    res.status(code);
+    res.set({'Content-Type': 'application/json'});
+    var err = {'error':error};
+    res.send( JSON.stringify(err) );
+    jive.logger.debug(err);
+};
+
 exports.taskCreate = function(req, res){
     handleCreateEdit(req, res);
 };
@@ -35,10 +44,69 @@ exports.taskEdit = function(req, res){
 };
 
 exports.taskGet = function(req, res){
+    var reqUrl = req.url;
+    var url_parts = url.parse(reqUrl, true);
+    var query = url_parts.query;
+
+    var taskID = query['taskID'];
+
+    task.persistence.find( "tasks", { 'taskID': taskID }).then( function( found ){
+        if ( !found || found.length < 1 ) {
+            errorResponse( res, 404, "Task not found");
+            return;
+        }
+
+        var first = found[0];
+        var task =  {
+            'taskID' : first['taskID'],
+            'taskDescription' : first['description']
+        };
+
+        res.status(200);
+        res.set({'Content-Type': 'application/json'});
+        res.send( JSON.stringify(task, null, 4) );
+    });
 };
 
 exports.taskDelete = function(req, res){
+    var reqUrl = req.url;
+    var url_parts = url.parse(reqUrl, true);
+    var query = url_parts.query;
+
+    var taskID = query['taskID'];
+
+    task.persistence.remove( "tasks", taskID ).then( function( found ){
+        if ( found ) {
+            res.status(204);
+        } else {
+            res.status(404);
+        }
+        res.set({'Content-Type': 'application/json'});
+        res.end();
+    });
+
 };
 
 exports.taskList = function(req, res){
+    var reqUrl = req.url;
+    var url_parts = url.parse(reqUrl, true);
+
+    var query = url_parts.query;
+    var filter = query['filter'];
+
+    if ( filter ) {
+        var terms = filter.split(/,/);
+        var filterKeys = {};
+        terms.forEach( function(term) {
+            var termParts = term.split(/:/);
+            filterKeys[termParts[0]] = termParts[1];
+        });
+        jive.logger.info("Search terms", filterKeys);
+    }
+
+    task.persistence.find( "tasks", filterKeys).then( function( found ){
+        res.status(200);
+        res.set({'Content-Type': 'application/json'});
+        res.send( JSON.stringify(found, null, 4) );
+    });
 };
