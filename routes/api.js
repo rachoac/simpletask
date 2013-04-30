@@ -213,8 +213,35 @@ exports.userList = function(req, res ) {
 
     var query = url_parts.query;
     var filterKeys = extractSearchTerms(query);
+
+    var placeID;
+    if (filterKeys['placeID'] ) {
+        placeID = filterKeys['placeID'];
+        delete filterKeys['placeID'];
+    }
+
     task.persistence.find( "users", filterKeys).then( function( found ){
-        okResponse( res, 200, found );
+
+        if ( placeID) {
+            var toReturn = [];
+
+            found.forEach( function(user) {
+                task.persistence.find( "userMemberships", {'userID': user['userID'] }).then( function( memberships ){
+                    for ( var i = 0; i < memberships.length; i++ ){
+                        var membership = memberships[i];
+                        if ( membership['placeID'] === placeID ) {
+                            toReturn.push( user );
+                            break;
+                        }
+                    }
+                }).then( function() {
+                    okResponse( res, 200, toReturn );
+                });
+            });
+        } else {
+            okResponse( res, 200, found );
+        }
+
     });
 };
 

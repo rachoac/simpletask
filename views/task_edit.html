@@ -8,6 +8,7 @@
 
 <input type="hidden" value="{{{taskID}}}" id="j-taskID">
 <input type="hidden" value="{{{placeID}}}" id="j-placeID">
+<input type="hidden" value="{{{assignedUserID}}}" id="j-assignedUserID">
 
 <body>
 
@@ -16,6 +17,8 @@
         <textarea id="txt_description" class="j-textarea">{{{taskDescription}}}</textarea>
         <h3>Place</h3>
         <div id="j-placeName"></div>
+        <h3>Assigned User</h3>
+        <select id="j-assignedUser"></select>
     </p>
 
     <p>

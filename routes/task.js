@@ -58,7 +58,8 @@ exports.taskEdit = function(req, res){
         res.render('task_edit', {
             'taskID' : first['taskID'],
             'taskDescription' : first['description'],
-            'placeID' : first['placeID']
+            'placeID' : first['placeID'],
+            'assignedUserID' : first['assignedUserID']
         });
     });
 

@@ -5,6 +5,7 @@ $(document).ready( function() {
 
     var taskID = $("#j-taskID").attr("value");
     var placeID = $("#j-placeID").attr("value");
+    var assignedUserID = $("#j-assignedUserID").attr("value");
 
     var handler = function(XMLHttpRequest, textStatus, errorThrown) {
         var response = JSON.parse( XMLHttpRequest['responseText'] );
@@ -30,7 +31,8 @@ $(document).ready( function() {
         var data = {
             "description" : description,
             "taskID" : taskID,
-            "placeID" : placeID
+            "placeID" : placeID,
+            "assignedUserID" : $("#j-assignedUser option:selected").attr("id")
         };
 
         // create
@@ -57,5 +59,20 @@ $(document).ready( function() {
     $.getJSON('/api/place?placeID=' + placeID, function(data) {
         $("#j-placeName").text(data['name']);
     });
+
+    // users
+    $.getJSON('/api/user/list?filter=placeID:' + placeID, function(data) {
+        data.forEach( function(userData) {
+            var userOption = $("<option id='" + userData['userID'] + "'>" + userData['name'] + "</option>");
+            $("#j-assignedUser").append( userOption );
+        });
+
+        // assigned user
+        $.getJSON('/api/user?userID=' + assignedUserID, function(data) {
+            var val = data['userID'];
+            $("#j-assignedUser option[id=" + val + "]").attr("selected", true )
+        });
+    });
+
 
 });

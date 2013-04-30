@@ -102,7 +102,6 @@ $(document).ready( function() {
             $("#fld_place").append( placeOption );
         });
 
-        debugger;
         selectedPlace( placeID );
         refreshTasks( selectedPlace() );
     });
