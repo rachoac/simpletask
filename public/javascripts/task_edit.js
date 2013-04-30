@@ -11,7 +11,7 @@ $(document).ready( function() {
 
         if ( XMLHttpRequest.status >= 200 && XMLHttpRequest.status <= 299 ) {
             // success - redirect to view
-            window.location = '/task/manage';
+            window.location = '/task/manage?placeID=' + placeID;
         } else {
             // error
             console.log(response);

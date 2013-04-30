@@ -6,7 +6,7 @@ $(document).ready( function() {
     var selectedPlace = function(val) {
         if ( val ) {
             // set it
-            $("#fld_place option").val( val );
+            $("#fld_place option[id=" + val + "]").attr("selected", true )
         }
 
         return $("#fld_place option:selected").attr("id");
@@ -81,6 +81,12 @@ $(document).ready( function() {
         });
     };
 
+    var getURLParameter = function(name) {
+        return decodeURI(
+            (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+        );
+    };
+
     ////////////////////////////////////////////
     $("#btn_add_task").click( handleAdd );
     $("#fld_place").change( function() {
@@ -89,17 +95,15 @@ $(document).ready( function() {
 
     // get places
     $.getJSON('/api/place/list', function(data) {
-        var first = true;
+
+        var placeID = getURLParameter('placeID') || data[0]['placeID'];
         data.forEach( function( placeData ) {
             var placeOption = $("<option id='" + placeData['placeID'] + "'>" + placeData['name'] + "</option>");
             $("#fld_place").append( placeOption );
-
-            if ( first ) {
-                selectedPlace( placeData['placeID'] );
-                first = false;
-            }
         });
 
+        debugger;
+        selectedPlace( placeID );
         refreshTasks( selectedPlace() );
     });
 
