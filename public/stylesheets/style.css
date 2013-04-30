@@ -16,11 +16,11 @@ body {
 }
 
 h2 {
-    margin-bottom: -2px;
+    margin-bottom: 0px;
 }
 
 h3 {
-    margin-bottom: -2px;
+    margin-bottom: 0px;
 }
 
 ul {
@@ -37,3 +37,23 @@ ul {
 }
 
 #submitForm label.error { margin-left: 20px; }
+
+
+.template {
+    display: none;
+}
+
+ul.j-task-list {
+}
+
+.j-task-control-label {
+    font-weight: bolder;
+}
+
+.j-task-control {
+    margin-left: 5px;
+}
+
+.j-task-control-label:hover {
+    color: orange;
+}

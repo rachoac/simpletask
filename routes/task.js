@@ -54,6 +54,6 @@ exports.taskEdit = function(req, res){
 
 };
 
-exports.taskManage = function(req, res){
-    res.render('task_edit');
+exports.taskManage = function(req, res) {
+    res.render('task_manage');
 };

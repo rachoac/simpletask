@@ -10,13 +10,12 @@ $(document).ready( function() {
 
         if ( XMLHttpRequest.status >= 200 && XMLHttpRequest.status <= 299 ) {
             // success - redirect to view
-            window.location = '/task/view?taskID=' + response['taskID'];
+            window.location = '/task/manage';
         } else {
             // error
             console.log(response);
             alert('Error - ' + response );
         }
-
     };
 
     var handleSubmit = function() {
@@ -44,6 +43,12 @@ $(document).ready( function() {
 
     };
 
+    var handleCancel = function() {
+        // handle cancel
+        window.location = '/task/manage';
+    };
+
     $("#btn_submit").click( handleSubmit );
+    $("#btn_cancel").click( handleCancel );
 
 });
