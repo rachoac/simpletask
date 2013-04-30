@@ -34,7 +34,7 @@ if ('development' == app.get('env')) {
 }
 
 // UI
-app.get('/', routes.index);
+app.get('/', taskUI.taskManage);
 app.get('/task/view', taskUI.taskView);
 app.get('/task/create', taskUI.taskCreate);
 app.get('/task/edit', taskUI.taskEdit);
@@ -47,6 +47,7 @@ app.post('/api/task', api.taskCreate );
 app.put('/api/task', api.taskEdit );
 app.delete('/api/task', api.taskDelete );
 app.get('/api/task/list', api.taskList );
+app.get('/api', api.api );
 
 var server = http.createServer(app).listen(config['port'] || 3000, function(){
     console.log("Express server listening on port " + server.address().port);

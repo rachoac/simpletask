@@ -110,3 +110,28 @@ exports.taskList = function(req, res){
         res.send( JSON.stringify(found, null, 4) );
     });
 };
+
+exports.api = function(req, res ){
+    var app = req.app;
+
+    var routes = [];
+
+    var adder = function( verb ) {
+        app.routes[verb].forEach( function(route) {
+            if ( route.path.indexOf('/api/') === 0 ) {
+                var routeInfo = verb.toUpperCase() + " " + route.path;
+                routes.push( routeInfo);
+            }
+        } );
+    };
+
+    adder('get');
+    adder('put');
+    adder('post');
+    adder('delete');
+
+    res.status(200);
+    res.set({'Content-Type': 'application/json'});
+    res.send( JSON.stringify(routes, null, 4) );
+
+};
