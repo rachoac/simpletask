@@ -4,11 +4,14 @@
  */
 
 var express = require('express')
+  , config = require( process.env['TASK_CONFIG'] || './config.json')
   , routes = require('./routes')
-  , task = require('./routes/task')
+  , taskUI = require('./routes/task')
+  , errorUI = require('./routes/error')
   , api = require('./routes/api')
   , consolidate = require('consolidate')
   , http = require('http')
+  , task = require('./lib/task')
   , path = require('path');
 
 var app = express();
@@ -32,9 +35,11 @@ if ('development' == app.get('env')) {
 
 // UI
 app.get('/', routes.index);
-app.get('/task/create', task.create);
-app.get('/task/edit', task.edit);
-app.get('/task/manage', task.manage);
+app.get('/task/view', taskUI.taskView);
+app.get('/task/create', taskUI.taskCreate);
+app.get('/task/edit', taskUI.taskEdit);
+app.get('/task/manage', taskUI.taskManage);
+app.get('/error', errorUI.route);
 
 // API
 app.get('/api/task', api.taskGet );
@@ -43,6 +48,6 @@ app.put('/api/task', api.taskEdit );
 app.delete('/api/task', api.taskDelete );
 app.delete('/api/task/list', api.taskList );
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+var server = http.createServer(app).listen(config['port'] || 3000, function(){
+    console.log("Express server listening on port " + server.address().port);
 });

@@ -29,9 +29,11 @@ ul {
 
 .j-textarea {
     width: 50%;
-    height: 512px;
+    height: 256px;
 }
 
 .j-textfield {
     width: 700px;
 }
+
+#submitForm label.error { margin-left: 20px; }
