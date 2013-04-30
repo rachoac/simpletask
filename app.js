@@ -42,12 +42,34 @@ app.get('/task/manage', taskUI.taskManage);
 app.get('/error', errorUI.route);
 
 // API
+app.get('/api', api.api );
+
+// task
 app.get('/api/task', api.taskGet );
 app.post('/api/task', api.taskCreate );
 app.put('/api/task', api.taskEdit );
 app.delete('/api/task', api.taskDelete );
 app.get('/api/task/list', api.taskList );
-app.get('/api', api.api );
+
+// user
+app.get('/api/user', api.userGet );
+app.post('/api/user', api.userCreate );
+app.put('/api/user', api.userEdit );
+app.delete('/api/user', api.userDelete );
+app.get('/api/user/list', api.userList );
+
+// user place membership
+app.post('/api/user/membership', api.userMembershipAdd );
+app.put('/api/user/membership', api.userMembershipAdd );
+app.delete('/api/user/membership', api.userMembershipDelete );
+app.get('/api/user/membership/list', api.userMembershipList );
+
+// place
+app.get('/api/place', api.placeGet );
+app.post('/api/place', api.placeCreate );
+app.put('/api/place', api.placeEdit );
+app.delete('/api/place', api.placeDelete );
+app.get('/api/place/list', api.placeList );
 
 var server = http.createServer(app).listen(config['port'] || 3000, function(){
     console.log("Express server listening on port " + server.address().port);

@@ -1,5 +1,5 @@
 {
-  "name": "jive simpletask",
+  "name": "jive-simpletask",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "jive-sdk": "*",
     "consolidate": "*",
     "mustache": "*",
+    "q": "*",
     "stylus": "*"
   }
 }
