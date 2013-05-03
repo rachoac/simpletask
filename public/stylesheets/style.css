@@ -69,3 +69,7 @@ pre {
 .j-task-controls, .j-task-assignee-container {
     font-size: 12px;
 }
+
+.j-activity-comments {
+    margin-top: 0px;
+}

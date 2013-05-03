@@ -123,6 +123,7 @@ exports.taskGet = function(req, res){
 
 exports.taskDelete = function(req, res){
     doDeleteByID(req, res, "tasks", "taskID" );
+    createActivity( 'task_delete', 'Deleted task' );
 };
 
 exports.taskList = function(req, res){
@@ -511,10 +512,10 @@ exports.activityCommentCreate  = function( req, res ) {
         okResponse(res, 200, saved );
     };
 
-    task.persistence.save( "comments", activityID, activity ).then( respond );
+    task.persistence.save( "comments", commentID, activity ).then( respond );
 };
 
-exports.activityCommentList  = function( req, res ) {
+exports.commentList  = function( req, res ) {
     var reqUrl = req.url;
     var url_parts = url.parse(reqUrl, true);
 

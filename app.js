@@ -8,6 +8,7 @@ var express = require('express')
   , routes = require('./routes')
   , taskUI = require('./routes/task')
   , errorUI = require('./routes/error')
+  , activityUI = require('./routes/activity')
   , api = require('./routes/api')
   , consolidate = require('consolidate')
   , http = require('http')
@@ -39,6 +40,7 @@ app.get('/task/view', taskUI.taskView);
 app.get('/task/create', taskUI.taskCreate);
 app.get('/task/edit', taskUI.taskEdit);
 app.get('/task/manage', taskUI.taskManage);
+app.get('/activity', activityUI.activityList);
 app.get('/error', errorUI.route);
 
 // API
@@ -77,7 +79,7 @@ app.post('/api/activity', api.activityCreate );
 app.get('/api/activity/list', api.activityGetList );
 app.get('/api/activity/comment', api.activityCommentGet );
 app.post('/api/activity/:activityID/comment', api.activityCommentCreate );
-app.get('/api/activity/comment/list', api.activityCommentList );
+app.get('/api/comment/list', api.commentList );
 
 var server = http.createServer(app).listen(config['port'] || 3000, function(){
     console.log("Express server listening on port " + server.address().port);

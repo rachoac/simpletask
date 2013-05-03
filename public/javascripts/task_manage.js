@@ -80,9 +80,8 @@ $(document).ready( function() {
                 $.getJSON('/api/user?userID=' + taskData['assignedUserID'], function(data) {
                     var val = data['name'];
                     taskRow.find('.j-task-assignee').text( val );
+                    taskRow.show();
                 });
-
-                taskRow.show();
             });
         });
     };
