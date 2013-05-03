@@ -76,6 +76,12 @@ $(document).ready( function() {
                 removeControl.click( handleDelete    );
                 taskRow.find(".j-task-controls").append(removeControl);
 
+                // assigned user
+                $.getJSON('/api/user?userID=' + taskData['assignedUserID'], function(data) {
+                    var val = data['name'];
+                    taskRow.find('.j-task-assignee').text( val );
+                });
+
                 taskRow.show();
             });
         });

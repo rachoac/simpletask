@@ -3,9 +3,12 @@
     "placeID": "077a6c73-dcd5-47cc-b59f-f800b649a493",
     "name": "Gardens"
   },
-
-    "077a6c73-dcd5-47cc-b59f-f800b649a422": {
-        "placeID": "077a6c73-dcd5-47cc-b59f-f800b649a422",
-        "name": "Homes"
-    }
+  "077a6c73-dcd5-47cc-b59f-f800b649a422": {
+    "placeID": "077a6c73-dcd5-47cc-b59f-f800b649a422",
+    "name": "Homes"
+  },
+  "cdba4628-5158-4939-a0af-3809b73841d3": {
+      "name": "Kansas",
+      "placeID": "cdba4628-5158-4939-a0af-3809b73841d3"
+  }
 }

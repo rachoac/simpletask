@@ -51,7 +51,7 @@ ul.j-task-list {
 }
 
 .j-task-control {
-    margin-left: 5px;
+    margin-right    : 5px;
 }
 
 .j-task-control-label:hover {
@@ -64,4 +64,8 @@ pre {
 
 .j-task-row {
     margin-bottom: 10px;
+}
+
+.j-task-controls, .j-task-assignee-container {
+    font-size: 12px;
 }

@@ -35,6 +35,17 @@ var doDeleteByID  = function( req, res, collection, keyID ){
     });
 };
 
+var createActivity = function(activityType, content) {
+    var activity = {
+        activityID : jive.util.guid(),
+        activityType: activityType,
+        content : content,
+        createTs : new Date().getTime()
+    };
+
+    return task.persistence.save( "activities", activity.activityID, activity );
+};
+
 var extractSearchTerms = function (query) {
     var filter = query['filter'];
 
@@ -61,7 +72,8 @@ exports.taskEdit = function(req, res){
     var assignedUserID = body['assignedUserID'];
     var placeID = body['placeID'];
 
-    if ( !taskID ) {
+    var isCreate = !taskID;
+    if ( isCreate ) {
         taskID = jive.util.guid();
     }
 
@@ -77,12 +89,12 @@ exports.taskEdit = function(req, res){
     };
 
     task.persistence.save( "tasks", taskID, data ).then( respond );
+    createActivity( 'task_' + ( isCreate ? 'create' : 'update' ), (isCreate ? 'Created' : 'Updated' ) + ' task ' + description );
 };
 
 exports.taskCreate = function(req, res){
     exports.taskEdit( req, res );
 };
-
 
 exports.taskGet = function(req, res){
     var reqUrl = req.url;
@@ -183,7 +195,8 @@ exports.userEdit = function(req, res ) {
     var userID = body['userID'];
     var name = body['name'];
 
-    if ( !userID ) {
+    var isCreate = !userID;
+    if ( isCreate) {
         userID = jive.util.guid();
     }
 
@@ -197,6 +210,9 @@ exports.userEdit = function(req, res ) {
     };
 
     task.persistence.save( "users", userID, data ).then( respond );
+    var content = (isCreate ? 'Created' : 'Updated' ) + ' user ' + name;
+    console.log(content);
+    createActivity( 'user_' + ( isCreate ? 'create' : 'update' ),  content );
 };
 
 exports.userCreate = function(req, res ) {
@@ -215,7 +231,7 @@ exports.userList = function(req, res ) {
     var filterKeys = extractSearchTerms(query);
 
     var placeID;
-    if (filterKeys['placeID'] ) {
+    if (filterKeys && filterKeys['placeID'] ) {
         placeID = filterKeys['placeID'];
         delete filterKeys['placeID'];
     }
@@ -352,7 +368,8 @@ exports.placeEdit = function(req, res ) {
     var placeID = body['placeID'];
     var name = body['name'];
 
-    if ( !placeID ) {
+    var isCreate = !placeID;
+    if ( isCreate ) {
         placeID = jive.util.guid();
     }
 
@@ -366,6 +383,7 @@ exports.placeEdit = function(req, res ) {
     };
 
     task.persistence.save( "places", placeID, data ).then( respond );
+    createActivity( 'place_' + ( isCreate ? 'create' : 'update' ), (isCreate ? 'Created' : 'Updated' ) + ' place ' + name );
 };
 
 exports.placeCreate = function(req, res ) {
@@ -383,6 +401,126 @@ exports.placeList = function(req, res ) {
     var query = url_parts.query;
     var filterKeys = extractSearchTerms(query);
     task.persistence.find( "places", filterKeys).then( function( found ){
+        okResponse( res, 200, found );
+    });
+};
+
+////////////////////////////
+// activity
+
+exports.activityGet = function( req, res ) {
+    var reqUrl = req.url;
+    var url_parts = url.parse(reqUrl, true);
+    var query = url_parts.query;
+    var activityID = query['activityID'];
+
+    task.persistence.find( "activities", { 'activityID': activityID }).then( function( found ){
+        if ( !found || found.length < 1 ) {
+            errorResponse( res, 404, "Activity not found");
+            return;
+        }
+
+        var first = found[0];
+        var activity = {
+            activityID : first['activityID'],
+            activityType: first['activityType'],
+            content : first['content'],
+            createTs : first['createTs']
+        };
+
+        okResponse( res, 200, activity );
+    });
+};
+
+exports.activityCreate  = function( req, res ) {
+    var body = req.body;
+
+    var activityID = body['activityID'] || jive.util.guid();
+    var activityType = body['type'];
+    var content = body['content'];
+    var createTs = body['createTS'] || new Date().getTime();
+
+    var activity = {
+        activityID : activityID,
+        activityType: activityType,
+        content : content,
+        createTs : createTs
+    };
+
+    var respond = function(saved) {
+        okResponse(res, 200, saved );
+    };
+
+    task.persistence.save( "activities", activityID, activity ).then( respond );
+};
+
+exports.activityGetList = function( req, res ) {
+    var reqUrl = req.url;
+    var url_parts = url.parse(reqUrl, true);
+
+    var query = url_parts.query;
+    var filterKeys = extractSearchTerms(query);
+    task.persistence.find( "activities", filterKeys).then( function( found ){
+        okResponse( res, 200, found );
+    });
+};
+
+exports.activityCommentGet  = function( req, res ) {
+    var reqUrl = req.url;
+    var url_parts = url.parse(reqUrl, true);
+    var query = url_parts.query;
+    var commentID = query['commentID'];
+
+    task.persistence.find( "comments", { 'commentID': commentID }).then( function( found ){
+        if ( !found || found.length < 1 ) {
+            errorResponse( res, 404, "Comment not found");
+            return;
+        }
+
+        var first = found[0];
+        var comment = {
+            commentID : first['commentID'],
+            activityID : first['activityID'],
+            commenterUserID: first['commenterUserID'],
+            content : first['content'],
+            createTs : first['createTs']
+        };
+
+        okResponse( res, 200, comment );
+    });
+};
+
+exports.activityCommentCreate  = function( req, res ) {
+    var body = req.body;
+
+    var commentID = body['commentID'] || jive.util.guid();
+    var activityID = req.params['activityID'];
+    var commenterUserID = body['commenterUserID'];
+    var content = body['content'];
+    var createTs = body['createTS'] || new Date().getTime()
+
+    var activity = {
+        commentID : commentID,
+        activityID : activityID,
+        commenterUserID: commenterUserID,
+        content : content,
+        createTs : createTs
+    };
+
+    var respond = function(saved) {
+        okResponse(res, 200, saved );
+    };
+
+    task.persistence.save( "comments", activityID, activity ).then( respond );
+};
+
+exports.activityCommentList  = function( req, res ) {
+    var reqUrl = req.url;
+    var url_parts = url.parse(reqUrl, true);
+
+    var query = url_parts.query;
+    var filterKeys = extractSearchTerms(query);
+    task.persistence.find( "comments", filterKeys).then( function( found ){
         okResponse( res, 200, found );
     });
 };

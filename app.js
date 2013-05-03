@@ -71,6 +71,14 @@ app.put('/api/place', api.placeEdit );
 app.delete('/api/place', api.placeDelete );
 app.get('/api/place/list', api.placeList );
 
+// activity
+app.get('/api/activity', api.activityGet );
+app.post('/api/activity', api.activityCreate );
+app.get('/api/activity/list', api.activityGetList );
+app.get('/api/activity/comment', api.activityCommentGet );
+app.post('/api/activity/:activityID/comment', api.activityCommentCreate );
+app.get('/api/activity/comment/list', api.activityCommentList );
+
 var server = http.createServer(app).listen(config['port'] || 3000, function(){
     console.log("Express server listening on port " + server.address().port);
 });
